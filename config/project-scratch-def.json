@@ -1,13 +1,22 @@
 {
-  "orgName": "Demo company",
+  "orgName": "RebornOrg",
   "edition": "Developer",
-  "features": ["EnableSetPasswordInApi"],
-  "settings": {
-    "lightningExperienceSettings": {
-      "enableS1DesktopEnabled": true
-    },
-    "mobileSettings": {
-      "enableS1EncryptedStoragePref2": false
+  "features": ["MaxApexCodeSize:10"],
+  "settings" : {
+      "orgPreferenceSettings": {
+        "settings": {
+            "orgPreferenceSettings": {
+                "s1EncryptedStoragePref2": false
+            },
+            "securitySettings": {
+                "sessionSettings": {
+                    "sessionTimeout": "TwelveHours"
+                },
+             "mobileSettings": {
+                "enableS1EncryptedStoragePref2": false
+            }
+        }
     }
-  }
+   }
+ }
 }
