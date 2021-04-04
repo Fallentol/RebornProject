@@ -1,9 +1,106 @@
 <template>
-    
+  <lightning-card title="CloudBudget 3.0">
+    <div class="slds-m-left_large">New LWC approach treck</div>
+    <div class="slds-m-left_large">Request Simulation</div>
+    <div class="slds-m-left_large">Request Name {request.name}</div>
+    <div class="slds-m-left_large">Request Amount {request.amount}</div>
+    <lightning-button class="slds-m-left_large" label="Do some useful" title="Do some useful" onclick={doSomeUseful}>
+    </lightning-button>
+    <lightning-input label="Request Amount" type="number" value={request.amount} onchange={handleChange}
+      class="slds-m-left_large">
+    </lightning-input>
 
-    <lightning-card  title="CloudBudget 3.0">
-        
-        <div class='slds-m-left_large'>New LWC approach</div> 
-        
-    </lightning-card>
-</template> 
+    <div class="slds-m-around_large">
+      Accounts:
+      <lightning-input label="Account Find" type="text" value={accountName} onchange={findAccount}> </lightning-input>
+      <template for:each={accounts} for:item="acc">
+        <div key={acc.Id}>
+          {acc.Name}
+        </div>
+      </template>
+    </div>
+
+    <template if:true={showSpinner}>
+      <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+
+
+    <template if:true={displayBottom}>
+      <br />
+      <p class="slds-m-top_medium slds-m-left_large">
+        Uppercased Full Name: {uppercasedFullName}
+      </p>
+      <lightning-input label="Full Name" type="text" value={uppercasedFullName} disabled
+        class="slds-m-left_large"></lightning-input>
+
+      <lightning-input name="firstName" label="First Name" onchange={handleChange2}></lightning-input>
+      <lightning-input name="lastName" label="Last Name" onchange={handleChange2}></lightning-input>
+      <div class="slds-m-left_large">Request Name {firstName}</div>
+      <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+        <template for:each={contacts} for:item="contact">
+          <tr key={contact.Id}>
+            <td>{contact.name}</td>
+            <td>{contact.value}</td>
+            <td>{contact.description}</td>
+            <td>{contact.fund}</td>
+            <td>{contact.grant}</td>
+            <td>{contact.FY}</td>
+            <td>{contact.func}</td>
+            <td>
+              <lightning-input type="number" value={contact.a1}></lightning-input>
+            </td>
+            <td>
+              <lightning-input type="number" value={contact.a2}></lightning-input>
+            </td>
+            <td>
+              <lightning-input type="number" value={contact.a3}></lightning-input>
+            </td>
+
+            <td>
+              <lightning-input type="number" value={contact.a4}></lightning-input>
+            </td>
+            <td>
+              <lightning-input type="number" value={contact.a5}></lightning-input>
+            </td>
+            <td>
+              <lightning-input type="number" value={contact.a6}></lightning-input>
+            </td>
+            <td>
+              <lightning-input type="number" value={contact.a7}></lightning-input>
+            </td>
+            <!--<td>
+              <lightning-input
+                type="number"
+                value={contact.a8}
+              ></lightning-input>
+            </td>
+            <td>
+              <lightning-input
+                type="number"
+                value={contact.a9}
+              ></lightning-input>
+            </td>
+            <td>
+              <lightning-input
+                type="number"
+                value={contact.a10}
+              ></lightning-input>
+            </td>
+            <td>
+              <lightning-input
+                type="number"
+                value={contact.a11}
+              ></lightning-input>
+            </td>
+            <td>
+              <lightning-input
+                type="number"
+                value={contact.a12}
+              ></lightning-input>
+            </td>-->
+          </tr>
+        </template>
+      </table>
+    </template>
+  </lightning-card>
+</template>
