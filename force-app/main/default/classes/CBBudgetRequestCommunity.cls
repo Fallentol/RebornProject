@@ -1,4 +1,4 @@
-public with sharing class CBBudgetRequestCommunity{
+public with sharing class CBBudgetRequestCommunity{ 
 	@AuraEnabled(cacheable = true)
 	public static List<BudgetRequest__c> getCBRequests(){
 		List<BudgetRequest__c> r = new List<BudgetRequest__c>();

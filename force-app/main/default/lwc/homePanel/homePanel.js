@@ -23,7 +23,7 @@ export default class HomePanel extends LightningElement {
     let accN = event.target.value;
     this.accountName = accN;
     this.showSpinner = true;
-    console.log(this.accountName);
+    console.log(this.accountName);  
   }
 
   @track request = { name: "New Request", amount: 55 };
