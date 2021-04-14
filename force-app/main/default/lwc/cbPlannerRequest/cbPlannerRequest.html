@@ -6,7 +6,8 @@
             <lightning-button-icon icon-name="utility:refresh" alternative-text="Settings" title="Settings"
                 onclick={updateBudgetRequestList}>
             </lightning-button-icon>
-            <lightning-button label="New" slot="actions"></lightning-button>
+            <lightning-button label="New" onclick={createNewRequest}></lightning-button>
+            <lightning-button label="Run Static Resource" onclick={runST}></lightning-button>
         </div>
 
         <div class="slds-m-around_medium">
@@ -66,6 +67,17 @@
                         <button class="slds-button slds-button_neutral" onclick={closeModal}
                             title="Cancel">Cancel</button>
                         <button class="slds-button slds-button_brand" onclick={saveRequest} title="Save">Save</button>
+
+                        <!-- ATTACHMENT -->
+                        <lightning-file-upload label="Attach receipt" name="fileUploader" accept={acceptedFormats}
+                            record-id={recordId} onuploadfinished={handleUploadFinished} multiple>
+                        </lightning-file-upload>
+                        <!-- ATTACHMENT -->
+
+                        <template for:each={attachments} for:item="file">
+                            <p key={file.Id}>{file.ContentDocument.Title}</p>
+                        </template>
+
                     </footer>
                 </div>
             </section>
