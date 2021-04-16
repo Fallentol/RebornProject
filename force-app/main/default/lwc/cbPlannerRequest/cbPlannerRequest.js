@@ -1,6 +1,7 @@
 import { LightningElement, api, wire, track } from "lwc";
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getBudgetRequestList from '@salesforce/apex/CBBudgetRequestCommunity.getCBRequests';
+import getAnalyticsSO from '@salesforce/apex/CBBudgetRequestCommunity.getAnalyticsSO';
 import saveCBRequests from '@salesforce/apex/CBBudgetRequestCommunity.saveCBRequests';//saveCBRequests
 import deleteCBRequest from '@salesforce/apex/CBBudgetRequestCommunity.deleteCBRequest';
 import getListOfRelatedFiles from '@salesforce/apex/CBBudgetRequestCommunity.getListOfRelatedFiles'; // 
@@ -18,11 +19,10 @@ const actions = [
 ];
 
 const columns = [
-    { label: 'Index', fieldName: 'Name' },
-    { label: 'Title', fieldName: 'Title__c' },
-    { label: 'Amount', fieldName: 'Amount__c', type: 'currency' },
-    { label: 'Date', fieldName: 'InactDate__c', type: 'date' },
-    { label: 'Description', fieldName: 'Description__c' },
+    { label: 'Title', fieldName: 'Name' },
+    { label: 'Amount', fieldName: 'cb4__Decimal1__c', type: 'currency' },
+    { label: 'Date', fieldName: 'cb4__Date1__c', type: 'date' },
+    { label: 'Description', fieldName: 'cb4__TextLong1__c' },
     {
         type: 'action',
         typeAttributes: { rowActions: actions },
@@ -35,11 +35,13 @@ export default class CBBudgetRequest extends LightningElement {
     @track error;
     @track warning;
     @api recordId;
-    request;
+    selectOptions;
+    @track request;
     attachments;
     columns = columns;
     isModalOpen = false;
     data = [];
+    spinOn = false;
     get acceptedFormats() {
         return ['.pdf', '.png', '.txt', '.docx'];
     }
@@ -49,18 +51,7 @@ export default class CBBudgetRequest extends LightningElement {
      */
     connectedCallback(objectApiName) {
         this.updateBudgetRequestList();
-    }
-
-    runST() {
-        try {
-            let t = _fireMessage;
-            alert(_isInvalid(t));
-            _fireMessage.error(this, 'Some Lib');
-            _cl('Hello LWC', 'gold');
-        } catch (e) {
-            alert("ERROR: " + e);
-        }
-
+        this.updateSelectOptionList();
     }
 
     /*************Page Handlers*************************************************************************/
@@ -73,6 +64,19 @@ export default class CBBudgetRequest extends LightningElement {
                 console.log('-> result:' + JSON.stringify(result));
                 this.budgetRequests = result;
                 this.data = result;
+            })
+            .catch(error => {
+                this.error = error;
+            });
+    }
+    updateSelectOptionList() {
+        console.log('-> GET THE LIST OF SELECT OPTIONS');
+
+        getAnalyticsSO()
+            .then(result => {
+                _cl('-> SELECT OPTIONS UPDATED', 'pink');
+                _cl('-> result:' + JSON.stringify(result), 'pink');
+                this.selectOptions = result;
             })
             .catch(error => {
                 this.error = error;
@@ -96,37 +100,64 @@ export default class CBBudgetRequest extends LightningElement {
         try {
             const field = event.target.name;
             const value = event.target.value;
+            const label = event.target.label;
+            const key = event.target.key;
             console.log(`Name: ${field} Value: ${value}`);
-            if (field === 'title') {
-                this.request.Title__c = value;
-            } else if (field === 'amount') {
-                this.request.Amount__c = value;
-            } else if (field === 'inactDate') {
-                this.request.InactDate__c = value;
-            } else if (field === 'description') {
-                this.request.Description__c = value;
-            }
-            console.log(`Result : ${JSON.stringify(this.request)} `);
+            console.log(`Name label: ${label}`);
+            console.log(`Name key: ${key}`);
+
+            ['title:Name', 'amount:cb4__Decimal1__c', 'enactDate:cb4__Date1__c', 'description:cb4__TextLong1__c', 'fund:cb4__Tag5__c', 'program:cb4__Tag6__c'].forEach((key) => {
+                let [inputField, sobjectField] = key.split(':');
+                if (field === inputField) this.request[sobjectField] = value;
+            });
+
+            _cl(`Result : ${JSON.stringify(this.request)} `, 'orange');
+        } catch (e) {
+            alert(e);
+        }
+    }
+    handleChildrenChanges(event) {
+        try {
+            const id = event.target.name;
+            const value = event.target.value;
+            const label = event.target.label;
+            console.log(`Name:${id} Value:${value} Label:${label}`);
+            let child = this.request.cb4__Elements1__r.find(elem => elem.Id === id);
+
+            ['Title:Name', 'Amount:cb4__Decimal1__c', 'Account:cb4__Tag1__c', 'Description:cb4__TextLong1__c'].forEach((key) => {
+                let [inputField, sobjectField] = key.split(':');
+                if (label === inputField) child[sobjectField] = value;
+            });
+
+            _cl('child:' + JSON.stringify(child), 'red');
+            _cl('request:' + JSON.stringify(this.request), 'red');
+
         } catch (e) {
             alert(e);
         }
     }
     saveRequest(event) {
-        console.log('Try to saveRequest ' + JSON.stringify(this.request));
+        _cl('Try to saveRequest ' + JSON.stringify(this.request), 'orange');
+        this.spinOn = true;
+        let children = this.request.cb4__Elements1__r;
+        children.forEach(elem => { delete elem.Id; });
+        delete this.request.cb4__Elements1__r;
         try {
-            saveCBRequests({ request: this.request })
+            saveCBRequests({ request: this.request, requestLines: children })
                 .then(result => {
                     try {
                         this.warning = result;
                         this.updateBudgetRequestList();
                         this.closeModal();
-
                         _fireMessage.success(this, 'Saved', 'Success');
+                        this.spinOn = false;
                     } catch (e) {
                         alert('ERROR:' + e);
+                        this.spinOn = false;
                     }
                 })
                 .catch(error => {
+                    this.spinOn = false;
                     this.error = error;
                 });
         } catch (e) {
@@ -136,8 +167,12 @@ export default class CBBudgetRequest extends LightningElement {
 
     /** Create a new Request */
     createNewRequest(event) {
-        let newRow = { "Title__c": "New Request", "InactDate__c": "2020-09-01", "Description__c": "", "Amount__c": 0 };
+        let newRow = { "Name": "New Request", "cb4__Date1__c": "2020-09-01", "cb4__TextLong1__c": "", "cb4__Decimal1__c": 0 };
         this.showRowDetails(newRow);
+    }
+
+    addNewRequestLine(event) {
+        this.request.cb4__Elements1__r.push({ "Name": "New Request Line", "cb4__TextLong1__c": "", "cb4__Decimal1__c": 0 });
     }
 
     updateListOfRelatedFiles(recordId) {
@@ -190,15 +225,18 @@ export default class CBBudgetRequest extends LightningElement {
         //deleteCBRequest
         const { Id } = row;
         if (!confirm('Are you sure?')) return null;
+        this.spinOn = true;
 
         deleteCBRequest({ recordId: Id })
             .then(result => {
                 this.warning = result;
                 this.updateBudgetRequestList();
                 _fireMessage.success(this, 'Deleted', 'Success');
+                this.spinOn = false;
             })
             .catch(error => {
                 this.error = error;
+                this.spinOn = false;
             });
     }
 

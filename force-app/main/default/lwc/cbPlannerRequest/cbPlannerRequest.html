@@ -7,7 +7,6 @@
                 onclick={updateBudgetRequestList}>
             </lightning-button-icon>
             <lightning-button label="New" onclick={createNewRequest}></lightning-button>
-            <lightning-button label="Run Static Resource" onclick={runST}></lightning-button>
         </div>
 
         <div class="slds-m-around_medium">
@@ -23,7 +22,7 @@
         <template if:true={isModalOpen}>
             <!-- Modal/Popup Box LWC starts here -->
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
                 <div class="slds-modal__container">
                     <!-- Modal/Popup Box LWC header here -->
                     <header class="slds-modal__header">
@@ -36,31 +35,129 @@
                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Budget Request</h2>
                     </header>
                     <!-- Modal/Popup Box LWC body starts here -->
+
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                        <lightning-layout>
-                            <lightning-layout-item padding="around-small" size="3">
-                                <div class="page-section page-right">
-                                    <lightning-input type="text" name="title" label="Title" value={request.Title__c}
-                                        onchange={handleModalChanges}>
-                                    </lightning-input>
+
+                        <lightning-tabset>
+
+                            <lightning-tab label="General">
+                                <!-- General Info -->
+                                <lightning-layout>
+                                    <lightning-layout-item padding="around-small" size="3">
+                                        <div class="page-section page-right">
+                                            <lightning-input type="text" name="title" label="Title" value={request.Name}
+                                                onchange={handleModalChanges}>
+                                            </lightning-input>
+                                        </div>
+                                        <div class="page-section page-right">
+                                            <lightning-combobox name="fund" label="Fund" value={request.cb4__Tag5__c}
+                                                placeholder="Select Fund" options={selectOptions.funds}
+                                                onchange={handleModalChanges}></lightning-combobox>
+                                        </div>
+                                        <div class="page-section page-right">
+                                            <lightning-combobox name="program" label="Program"
+                                                value={request.cb4__Tag6__c} placeholder="Select Program"
+                                                options={selectOptions.programs} onchange={handleModalChanges}>
+                                            </lightning-combobox>
+                                        </div>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="3">
+                                        <div class="page-section page-main">
+                                            <lightning-input type="date" name="enactDate" label="Enact Date"
+                                                onchange={handleModalChanges} value={request.cb4__Date1__c}>
+                                            </lightning-input>
+                                            <lightning-input type="number" name="amount" label="Amount"
+                                                onchange={handleModalChanges} value={request.cb4__Decimal1__c}
+                                                formatter="currency" step="0.01"></lightning-input>
+                                        </div>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small" size="3">
+                                        <div class="page-section page-right">
+                                            <lightning-input type="text" name="description" label="Description"
+                                                onchange={handleModalChanges} value={request.cb4__TextLong1__c}>
+                                            </lightning-input>
+                                        </div>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                                <!-- General Info -->
+                                <div>
+                                    <lightning-button label="Add Line" onclick={addNewRequestLine}></lightning-button>
+                                    <table
+                                        class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Title">Title</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Account">Account</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Amount">Amount</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Description">Description</div>
+                                                </th> 
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Action">Action</div>
+                                                </th> 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={request.cb4__Elements1__r} for:item="child">
+                                                <tr key={child.Id} class="slds-hint-parent">
+                                                    <th data-label="Title">
+                                                        <lightning-input type="text" name={child.Id} label="Title" key={child.Id}
+                                                            value={child.Name} onchange={handleChildrenChanges}>
+                                                        </lightning-input>
+                                                    </th>
+                                                    <td data-label="Account">
+                                                        <lightning-combobox name={child.Id} label="Account"
+                                                            value={request.cb4__Tag2__c} placeholder="Select Account"
+                                                            options={selectOptions.accounts}
+                                                            onchange={handleChildrenChanges}>
+                                                        </lightning-combobox>
+                                                    </td>
+                                                    <td data-label="Amount">
+                                                        <lightning-input type="number" name={child.Id} label="Amount"
+                                                            onchange={handleChildrenChanges}
+                                                            value={child.cb4__Decimal1__c} formatter="currency"
+                                                            step="0.01"></lightning-input>
+                                                    </td>
+                                                    <td data-label="Descroption">
+                                                        <lightning-input type="text" name={child.Id}
+                                                            label="Description" value={child.cb4__TextLong1__c}
+                                                            onchange={handleChildrenChanges}>
+                                                        </lightning-input>
+                                                    </td>
+                                                    <td data-label="Action">
+                                                        <lightning-button label="Del" onclick={deleteChildLine}></lightning-button>
+                                                    </td>
+                                                </tr>
+                                            </template>
+
+                                        </tbody>
+                                    </table>
+
+
+
                                 </div>
-                            </lightning-layout-item>
-                            <lightning-layout-item padding="around-small" size="6">
-                                <div class="page-section page-main">
-                                    <lightning-input type="date" name="inactDate" label="Title"
-                                        onchange={handleModalChanges} value={request.InactDate__c}></lightning-input>
-                                    <lightning-input type="number" name="amount" label="Amount"
-                                        onchange={handleModalChanges} value={request.Amount__c} formatter="currency"
-                                        step="0.01"></lightning-input>
-                                </div>
-                            </lightning-layout-item>
-                            <lightning-layout-item padding="around-small" size="3">
-                                <div class="page-section page-right">
-                                    <lightning-input type="text" name="description" label="Description"
-                                        onchange={handleModalChanges} value={request.Description__c}></lightning-input>
-                                </div>
-                            </lightning-layout-item>
-                        </lightning-layout>
+                            </lightning-tab>
+                            <lightning-tab label="Attachment" title="2nd tab extended title">
+                                <!-- ATTACHMENT -->
+                                <lightning-file-upload label="Attach receipt" name="fileUploader"
+                                    accept={acceptedFormats} record-id={recordId}
+                                    onuploadfinished={handleUploadFinished} multiple>
+                                </lightning-file-upload>
+                                <!-- ATTACHMENT -->
+
+                                <template for:each={attachments} for:item="file">
+                                    <p key={file.Id}>{file.ContentDocument.Title}</p>
+                                </template>
+                            </lightning-tab>
+
+                        </lightning-tabset>
+
                     </div>
                     <!-- Modal/Popup Box LWC footer starts here -->
                     <footer class="slds-modal__footer">
@@ -68,22 +165,20 @@
                             title="Cancel">Cancel</button>
                         <button class="slds-button slds-button_brand" onclick={saveRequest} title="Save">Save</button>
 
-                        <!-- ATTACHMENT -->
-                        <lightning-file-upload label="Attach receipt" name="fileUploader" accept={acceptedFormats}
-                            record-id={recordId} onuploadfinished={handleUploadFinished} multiple>
-                        </lightning-file-upload>
-                        <!-- ATTACHMENT -->
-
-                        <template for:each={attachments} for:item="file">
-                            <p key={file.Id}>{file.ContentDocument.Title}</p>
-                        </template>
-
                     </footer>
                 </div>
             </section>
             <div class="slds-backdrop slds-backdrop_open"></div>
         </template>
         <!--MODAL WINDOW-->
+
+        <!--SPINNER -->
+        <template if:true={spinOn}>
+            <div class="spinnerStyle">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+        <!--SPINNER -->
 
 
         <p slot="footer"></p>
