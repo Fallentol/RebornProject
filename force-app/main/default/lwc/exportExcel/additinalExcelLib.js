@@ -7,6 +7,6 @@ let getTermOptions = () => {
 
 let calculateValues = (val1, val2, val3) => {
   return val1 + val2 + val3;
-}; 
+};
 
 export { getTermOptions, calculateValues };

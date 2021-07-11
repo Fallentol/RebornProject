@@ -53,4 +53,3 @@ export const _cl = (function (message, color) {
 
     }
 });
-

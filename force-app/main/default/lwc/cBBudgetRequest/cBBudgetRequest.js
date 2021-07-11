@@ -46,7 +46,7 @@ export default class CBBudgetRequest extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-            });  
+            });
     }
     handleTableButtons(event) {
         const actionName = event.detail.action.name;

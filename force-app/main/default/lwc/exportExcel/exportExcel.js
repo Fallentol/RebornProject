@@ -1,4 +1,3 @@
-import { LightningElement } from "lwc";
-import { calculateValues } from "c/additionalExcelLib";
+import { LightningElement } from 'lwc';
 
-export default class ExportExcel extends LightningElement {} 
+export default class ExportExcel extends LightningElement {}
