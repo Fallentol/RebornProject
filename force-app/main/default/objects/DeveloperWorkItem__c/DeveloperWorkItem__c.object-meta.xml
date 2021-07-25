@@ -143,25 +143,24 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <enableActivities>true</enableActivities>
+    <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>true</enableHistory>
+    <enableHistory>false</enableHistory>
     <enableLicensing>false</enableLicensing>
-    <enableReports>true</enableReports>
-    <enableSearch>true</enableSearch>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>Private</externalSharingModel>
-    <label>Budget Request</label>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <label>Developer Work Item</label>
     <nameField>
-        <displayFormat>RQ{000000}</displayFormat>
-        <label>BudgetRequest Name</label>
-        <trackHistory>false</trackHistory>
-        <type>AutoNumber</type>
+        <label>Developer Work Item Name</label>
+        <type>Text</type>
     </nameField>
-    <pluralLabel>Budget Requests</pluralLabel>
+    <pluralLabel>Developer Work Items</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>
