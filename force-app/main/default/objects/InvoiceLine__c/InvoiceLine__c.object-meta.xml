@@ -143,25 +143,24 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <enableActivities>true</enableActivities>
+    <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>true</enableHistory>
+    <enableHistory>false</enableHistory>
     <enableLicensing>false</enableLicensing>
-    <enableReports>true</enableReports>
-    <enableSearch>true</enableSearch>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>Private</externalSharingModel>
-    <label>Budget Request</label>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <label>Invoice Line</label>
     <nameField>
-        <displayFormat>RQ{000000}</displayFormat>
-        <label>BudgetRequest Name</label>
-        <trackHistory>false</trackHistory>
+        <displayFormat>INVLINE-{00000000}</displayFormat>
+        <label>Invoice Line Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Budget Requests</pluralLabel>
+    <pluralLabel>Invoice Lines</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>
