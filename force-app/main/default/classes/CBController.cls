@@ -14,4 +14,13 @@ public with sharing class CBController {
             q += ' WHERE Name LIKE \'%' + name + '%\'';
         return Database.query(q);
     }
+
+    public static void cg() {
+        Integer i = 0;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+    }
 }
